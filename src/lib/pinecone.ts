@@ -35,12 +35,18 @@ export async function loadS3IntoPinecone(fileKey: string) {
   const pages = (await loader.load()) as PDFPage[]
 
   // 2. split and segment the pdf
+  console.log("split and segment the pdf")
+
   const documents = await Promise.all(pages.map(prepareDocument))
 
   // 3. vectorized and embed individual documents
+  console.log("vectorized and embed individual documents", documents)
+
   const vectors = await Promise.all(documents.flat().map(embedDocument))
 
   // 4. upload to pinecone
+  console.log("upload to pinecone")
+
   const client = await getPineconeClient()
   const pineconeIndex = await client.index("benahavis")
   const namespace = pineconeIndex.namespace(convertToAscii(fileKey))
