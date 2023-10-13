@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import React from "react"
+import React, { useEffect } from "react"
 import { Message } from "ai"
 import { useChat } from "ai/react"
 import { Input } from "./ui/input"
@@ -15,9 +15,6 @@ type ChatComponentProps = {
 }
 
 export default function ChatComponent({ chatId }: ChatComponentProps) {
-  const { input, handleInputChange, handleSubmit, messages } = useChat({
-    api: "/api/chat",
-  })
   const { data, isLoading } = useQuery({
     queryKey: ["chat", chatId],
     queryFn: async () => {
@@ -27,6 +24,23 @@ export default function ChatComponent({ chatId }: ChatComponentProps) {
       return response.data
     },
   })
+  const { input, handleInputChange, handleSubmit, messages } = useChat({
+    api: "/api/chat",
+    body: {
+      chatId,
+    },
+    initialMessages: data || [],
+  })
+  useEffect(() => {
+    const messageContainer = document.getElementById("message-container")
+    if (messageContainer) {
+      messageContainer.scrollTo({
+        top: messageContainer.scrollHeight,
+        behavior: "smooth",
+      })
+    }
+  }, [messages])
+
   return (
     <div
       className="relative max-h-screen overflow-scroll"
@@ -42,7 +56,7 @@ export default function ChatComponent({ chatId }: ChatComponentProps) {
 
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-white"
+        className="sticky bottom-0 inset-x-0 mt-2 px-2 py-4 bg-white"
       >
         <div className="flex">
           <Input
