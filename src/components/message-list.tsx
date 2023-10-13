@@ -36,7 +36,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
                 }
               )}
             >
-              <p>{message.content}</p>
+              <p className="whitespace-break-spaces">{message.content}</p>
             </div>
           </div>
         )
