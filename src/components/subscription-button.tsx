@@ -3,9 +3,11 @@ import React, { useState } from "react"
 import { Button } from "./ui/button"
 import axios from "axios"
 
-type Props = { isPro: boolean }
+type SubscriptionButtonProps = {
+  isPro: boolean
+}
 
-const SubscriptionButton = (props: Props) => {
+export default function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
   const [loading, setLoading] = useState(false)
   const handleSubscription = async () => {
     try {
@@ -20,9 +22,7 @@ const SubscriptionButton = (props: Props) => {
   }
   return (
     <Button disabled={loading} onClick={handleSubscription} variant="outline">
-      {props.isPro ? "Manage Subscriptions" : "Get Pro"}
+      {isPro ? "Manage Subscriptions" : "Get Pro"}
     </Button>
   )
 }
-
-export default SubscriptionButton
